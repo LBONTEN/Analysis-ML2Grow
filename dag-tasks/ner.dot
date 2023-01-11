@@ -1,0 +1,6 @@
+digraph {
+    rankdir=LR
+    
+    load_ner -> ner
+    ner -> save_ner
+}

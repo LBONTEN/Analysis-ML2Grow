@@ -1,0 +1,8 @@
+digraph {
+    rankdir=LR
+
+    load_bertopic -> retrain_and_save
+    retrain_and_save -> restart
+    restart -> transform
+    transform -> {save_transform, save_topics}
+}

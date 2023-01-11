@@ -1,0 +1,69 @@
+digraph G {
+rankdir=LR
+beautify = true
+
+    start [shape = "diamond"]
+    start -> {
+        load_zeroshot 
+        load_taxo 
+        load_bertopic_rs 
+        load_bertopic_ts 
+        load_ner 
+        load_embed
+    }
+
+    subgraph cluster_bertopic_rs {
+        label = "bertopic_retrain_and_save"
+        cluster = true
+
+        load_bertopic_rs -> retrain_and_save
+        retrain_and_save -> restart
+        restart -> transform_rs
+        transform_rs -> { save_transform save_topics }
+    }
+
+    subgraph cluster_bertopic_ts {
+        label = "bertopic_transform"
+        cluster = true
+
+        load_bertopic_ts -> transform_ts
+        transform_ts -> save_bertopic
+    }
+
+    subgraph cluster_embed {
+        label = "embed"
+        cluster = true
+
+        load_embed -> embed
+        embed -> save_embed
+    }
+
+
+    subgraph cluster_zeroshot {
+        label="zeroshot";
+        cluster=true;
+
+        {load_zeroshot load_taxo} -> zs_bbc
+        zs_bbc -> save_zeroshot
+    }
+
+    subgraph cluster_ner {
+        label = "ner";
+        cluster = true;
+
+        load_ner -> ner
+        ner -> save_ner
+    }
+
+    end [shape="diamond"]   
+    { 
+        save_ner 
+        save_zeroshot
+        save_embed 
+        save_bertopic 
+        save_transform 
+        save_topics
+    } -> end
+    
+
+}

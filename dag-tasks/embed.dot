@@ -1,0 +1,6 @@
+digraph {
+    rankdir=LR
+    
+    load_embed -> embed
+    embed -> save_embed
+}

@@ -78,13 +78,8 @@ Takes BERTopic output and saves it to a sparql endpoint
     }}
 ```
 
-
-
 ### transform
 
-
-
- 
 ## poc-ai-bertopic
 
 initial loading of the model. Using Roberta as the embedding model.
@@ -163,8 +158,6 @@ cli scripts for Named Entity Recognition
     
     }}
 ```
-
-
 
 ## poc-ai-airflow-zeroshot
 
