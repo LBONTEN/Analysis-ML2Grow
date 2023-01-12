@@ -1,5 +1,4 @@
 digraph g {
-    empty_node [label="..." style="dashed"]
 
     bbc_classification [label="info:ML2GrowClassification/87adadcd-b5ef-4c89-9ca8-b4d7c0bf4e13" shape=box]
 

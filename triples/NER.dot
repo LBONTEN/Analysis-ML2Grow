@@ -1,5 +1,4 @@
 digraph g {
-    empty_node [label="..." style="dashed"]
 
     subject [label="info:ners/00084665-bb57-4f82-83f3-898be4be6612" shape=box]
     organization [label="ext:Organization" shape=box]
