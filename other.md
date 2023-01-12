@@ -1,10 +1,43 @@
 # Blueprint POC AI
 
+## Table of Content
+
+- [Blueprint POC AI](#blueprint-poc-ai)
+  - [Table of Content](#table-of-content)
+  - [Introduction](#introduction)
+    - [SparQL Prefixes](#sparql-prefixes)
+  - [Models](#models)
+    - [NER - Named Entity Recognition](#ner---named-entity-recognition)
+    - [BERTopic](#bertopic)
+    - [Embed](#embed)
+    - [Zeroshot](#zeroshot)
+  - [Apache Airflow architecture](#apache-airflow-architecture)
+  - [DAGs - Directed Acyclic Graphs](#dags---directed-acyclic-graphs)
+    - [NER](#ner)
+    - [BERTopic Retrain](#bertopic-retrain)
+    - [BERTopic Transform](#bertopic-transform)
+    - [Embed](#embed-1)
+    - [Zeroshot](#zeroshot-1)
+  - [Data Flow Diagrams](#data-flow-diagrams)
+  - [Triplestore Mapping](#triplestore-mapping)
+  - [Conclusion](#conclusion)
+
 ## Introduction
 
 This project lays out the architecture of the ML2Grow AI project. This project was instantiated in order to leverage the power of AI in current and future LBLOD projects.
 This blueprint was meant to lay bare this architecture to make potential improvements apparent.
 [...]
+
+### SparQL Prefixes
+
+Throughout this document we will make use of prefixes in order to abbreviate some links that will occur, to make this more readable.  
+These prefixes are explained here:
+
+Prefix | Full link
+---|---
+ext | <http://mu.semte.ch/vocabularies/ext/>  
+rdf | <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  
+info | <http://data.lblod.info/>
 
 ## Models
 
@@ -69,22 +102,23 @@ During these tasks. We first load the NER model. Then we perform NER related stu
 3. [Save](https://github.com/lblod/poc-ai-airflow-ner/blob/master/scripts/save.py)  
     Finally the results are persisted in the triplestore. The results are saved in the triplestore like this.
 
-    _NER: <http://data.lblod.info/ners/{UUID}>_
-    Property | Description
+    _Example_  
+    ![Example](./triples/NER.dot.svg)
+
+    Predicate | Description
     ---|---
-    Type |  A constant value being ext:Ner. Representing the type of the subject.
-    start   | The start position of the word. Relative to [...].
-    end | The end position of the word. Relative to [...].
-    word    | The word that was guessed on by the AI model.
-    entity  | Can be either "Location", "Person" or "Organization". This is the value guessed by the AI model.
+    rdf:type |  A constant value being ext:Ner. Representing the type of the subject.
+    ext:start   | The start position of the word. Relative to [...].
+    ext:end | The end position of the word. Relative to [...].
+    ext:word    | The word that was guessed on by the AI model.
+    ext:entity  | Can be either "Location", "Person" or "Organization". This is the value guessed by the AI model.
 
     Additionally we also add a predicate to the file that was used to generate the NER with.
 
-    _File_
-    Property | Description
+    Predicate | Description
     ---|---
-    hasNer | A link to the NER associated with the document
-    ingestedml2GrowSmartRegulationsNer | Tag indicating it has already been ingested for future runs of the model.
+    ext:hasNer | A link to the NER associated with the document. A document can relate to many NERs.
+    ext:ingestedml2GrowSmartRegulationsNer | Tag indicating it has already been ingested for future runs of the model.
 
 ### BERTopic Retrain
 
@@ -109,36 +143,42 @@ During these tasks. We first load the NER model. Then we perform NER related stu
     ```
 
 2. [Retrain & Save](https://github.com/lblod/poc-ai-airflow-bertopic/blob/master/scripts/retrain.py)  
-    [...]
+    [...]  
+
 3. Restart  
-    [...]
+    [...]  
+
 4. [Transform](https://github.com/lblod/poc-ai-airflow-bertopic/blob/master/scripts/transform.py)  
     [...]
+
 5. Save
    1. [Transform](https://github.com/lblod/poc-ai-airflow-bertopic/blob/master/scripts/save_transform.py)
 
-        _Topic: <http://data.lblod.info/ML2GrowTopicModeling/topic/{UUID}>_
-        Property | Description
+        _Example_  
+        ![Example](./triples/BERTopic-transforms.dot.svg)
+
+        Predicate | Description
         ---|---
-        Type | isTopic
-        relevant_words | The relevant words found by the model.
-        count | The count of [...]
-        topic_label | The label of the topic
+        ext:HasTopic | URI to the linked topic.
+        ext:ingestedByMl2GrowSmartRegulationsTopics | Tag indicating it has been ingested by a ML2Grow model.
+
+        Predicate | Description
+        ---|---
+        rdf:type | TopicScore
+        ext:TopicURI | URI to the linked topic
+        ext:score | score of the linked topic
 
    2. [Topics](https://github.com/lblod/poc-ai-airflow-bertopic/blob/master/scripts/save_topics.py)
 
-        _File_
-        Property | Description
-        ---|---
-        HasTopic | URI to the linked topic.
-        ingestedByMl2GrowSmartRegulationsTopics | Tag indicating it has been ingested by a ML2Grow model.
+        _Example_  
+        ![Example](./triples/BERTopic-topics.dot.svg)
 
-        _Topic Score: <http://data.lblod.info/ML2GrowTopicModeling/{UUID}>_
-        Property | Description
+        Predicate | Description
         ---|---
-        Type | TopicScore
-        TopicURI | URI to the linked topic
-        score | score of the linked topic
+        rdf:type | isTopic
+        ext:relevant_words | The relevant words found by the model. A Topic can have multiple relevant words.
+        ext:count | The count of [...]
+        ext:topic_label | The label of the topic
 
 ### BERTopic Transform
 
@@ -163,9 +203,10 @@ During these tasks. We first load the NER model. Then we perform NER related stu
     ```
 
 2. [Transform](https://github.com/lblod/poc-ai-airflow-bertopic/blob/master/scripts/transform.py)  
-    [...]
+    [...]  
+
 3. [Save](https://github.com/lblod/poc-ai-airflow-bertopic/blob/master/scripts/save_transform.py)
-    This script saves the same data as the number 3.1 of the previous section. So you can find this info over there.
+    This script saves the same data as the number 3.1 of [the previous section](#bertopic-retrain).
 
 ### Embed
 
@@ -191,14 +232,18 @@ During these tasks. We first load the NER model. Then we perform NER related stu
         }
     ```
 
-2. [Embed](https://github.com/lblod/poc-ai-airflow-embed/blob/master/scripts/embed.py)
+2. [Embed](https://github.com/lblod/poc-ai-airflow-embed/blob/master/scripts/embed.py)  
+    [...]
+
 3. [Save](https://github.com/lblod/poc-ai-airflow-embed/blob/master/scripts/save.py)
 
-    _File_
-    Property | Description
+    _Example_  
+    ![Example](./triples/Embed.dot.svg)
+
+    Predicate | Description
     ---|---
-    searchEmbedding | Embedding Vector linked to the file.
-    ingestedByMl2GrowSmartRegulationsEmbedding | Tag indicating it has been ingested by a ML2Grow model.
+    ext:searchEmbedding | Embedding Vector linked to the file.
+    ext:ingestedByMl2GrowSmartRegulationsEmbedding | Tag indicating it has been ingested by a ML2Grow model.
 
 ### Zeroshot
 
@@ -222,7 +267,7 @@ During these tasks. We first load the NER model. Then we perform NER related stu
             }
         ```
 
-   2. [Taxo](https://github.com/lblod/poc-ai-airflow-zeroshot/blob/master/scripts/load.py)
+   2. [Taxonomy](https://github.com/lblod/poc-ai-airflow-zeroshot/blob/master/scripts/load.py)
 
         ```sparql
             PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
@@ -233,16 +278,24 @@ During these tasks. We first load the NER model. Then we perform NER related stu
             }
         ```
 
-2. [ZS_BBC](https://github.com/lblod/poc-ai-airflow-zeroshot/blob/master/scripts/zeroshot.py)
+2. [ZS_BBC](https://github.com/lblod/poc-ai-airflow-zeroshot/blob/master/scripts/zeroshot.py)  
+    [...]
+
 3. [Save](https://github.com/lblod/poc-ai-airflow-zeroshot/blob/master/scripts/save.py)
 
-    _Zeroshot Classification: <http://data.lblod.info/ML2GrowClassification/score/{UUID}>_
-    Property | Description
+    _Example_  
+    ![Example](./triples/Zeroshot.dot.svg)
+
+    Predicate | Description
     ---|---
-    Type | One of many values
-    score | Score of the models prediction
-    BBC_scoring | Result of the BBC classification
-    ingestedMl2GrowSmartRegulationsBBC | Tag indicating it has been ingested by a ML2Grow model.
+    rdf:type | One of many values
+    ext:score | Score of the models prediction
+
+    _File_
+    Predicate | Description
+    ---|---
+    ext:BBC_scoring | Link to the BBC Scoring instance. A document can have multiple of these instances.
+    ext:ingestedMl2GrowSmartRegulationsBBC | Tag indicating it has been ingested by the zeroshot model.
 
 ## Data Flow Diagrams
 

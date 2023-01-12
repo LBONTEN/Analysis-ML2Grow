@@ -1,7 +1,6 @@
 digraph {
     rankdir=LR
     
-    load_zeroshot -> zs_bbc
-    load_taxo -> zs_bbc
+    { load_zeroshot, load_taxo } -> zs_bbc
     zs_bbc -> save_zeroshot
 }
