@@ -1,0 +1,8 @@
+digraph g {
+    
+    subject [label="info:submissions/6141B82FE575460008000187" shape=box]
+
+    subject -> "[0.2369632124900818,\n 0.3541308045387268,\n ... ]" [label="[ext:searchEmbedding]" dir=none]
+    subject -> 1 [label="[ext:ingestedByMl2GrowSmartRegulationsEmbedding]" dir=none]
+
+}

@@ -1,0 +1,18 @@
+digraph g {
+    empty_node [label="..." style="dashed"]
+
+    subject [label="info:ners/00084665-bb57-4f82-83f3-898be4be6612" shape=box]
+    organization [label="ext:Organization" shape=box]
+
+    subject -> "ext:Ner" [label="[rdf:type]" dir=none]
+    subject -> 7328 [label="[ext:start]" dir=none]
+    subject -> 7336 [label="[ext:end]" dir=none]
+    subject -> Medirest [label="[ext:word]" dir=none]
+    subject -> organization [label="[ext:entity]" dir=none]
+
+    file [label="info:submissions/61D5740AE4465300080001BA" shape=box]
+    
+    file -> subject [label="[ext:hasNer]*" dir=none]
+    file -> 1 [label="[ext:ingestedml2GrowSmartRegulationsNer]" dir=none]
+
+}

@@ -1,0 +1,20 @@
+digraph g {
+    empty_node [label="..." style="dashed"]
+
+    bbc_classification [label="info:ML2GrowClassification/87adadcd-b5ef-4c89-9ca8-b4d7c0bf4e13" shape=box]
+
+    bbc_classification -> "ext:BBC_lvl1" [label="[rdf:type]" dir=none]
+    bbc_classification ->"getting around and mobility" [label="[ext:en_taxonomy]" dir=none]
+    bbc_classification -> "Zich verplaatsen en mobiliteit" [label="[ext:nl_taxonomy]" dir=none] 
+
+    subject [label="info:ML2GrowClassification/score/f6cddc91-0de4-40d5-8953-5484934cb29c" shape=box]
+
+    subject -> bbc_classification [label="[rdf:type]" dir=none]
+    subject -> 0.098363965749741 [label="[ext:score]" dir=none]
+
+    file [label="info:submissions/000f8300-9558-11ec-b711-ebd518564af2" shape=box]
+
+    file -> subject [label="[ext:BBC_scoring]*" dir=none]
+    file -> 1 [label="[ext:ingestedMl2GrowSmartRegulationsBBC]" dir=none]
+
+}

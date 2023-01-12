@@ -1,0 +1,16 @@
+digraph g {
+
+    subject [label="info:ML2GrowTopicModeling/topic/100" shape=box]
+
+    subject -> "ext:isTopic" [label="[rdf:type]" dir=none]
+    subject -> relevant_word [label="[ext:relevant_words]*" dir=none]
+    subject -> 53 [label="[ext:count]" dir=none]
+    subject -> vermeld_boring_286_dlb [label="[ext:topic_label]" dir=none]
+
+    relevant_word [label="info:ML2GrowTopicModeling/topic/100/relevant_words/0" shape=box]
+
+    relevant_word -> "ext:relevant_word" [label="[rdf:type]" dir=none]
+    relevant_word -> 0.012454516208949 [label="[ext:score]" dir=none]
+    relevant_word -> vermeld [label="[ext:word]" dir=none]
+
+}

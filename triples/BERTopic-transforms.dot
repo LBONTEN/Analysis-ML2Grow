@@ -1,0 +1,14 @@
+digraph g {
+
+    file [label="info:submissions/002d6280-f6c4-11ec-9646-0b4ee566f41d" shape=box]
+
+    file -> topicScore [label="[ext:HasTopic]" dir=none]
+    file -> 1 [label="[ext:ingestedByMl2GrowSmartRegulationsTopics]" dir=none]
+
+    topic [label="info:ML2GrowTopicModeling/topic/60" shape=box]
+    topicScore [label="info:ML2GrowTopicModeling/a1f2ad4c-2568-4178-a84a-dcbb066f88b5" shape=box]
+
+    topicScore -> "ext:TopicScore" [label="[rdf:type]" dir=none]
+    topicScore -> topic [label="[ext:TopicURI]" dir=none]
+    topicScore -> 0.62123157715132 [label="[ext:score]" dir=none]
+}
