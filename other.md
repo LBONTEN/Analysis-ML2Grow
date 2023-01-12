@@ -207,7 +207,7 @@ During these tasks. We first load the NER model. Then we perform NER related stu
 
 3. [Save](https://github.com/lblod/poc-ai-airflow-bertopic/blob/master/scripts/save_transform.py)
     This script saves the same data as the number 3.1 of [the previous section](#bertopic-retrain).
-
+`1
 ### Embed
 
 ![embed tasks](dag-tasks/embed.dot.svg)
